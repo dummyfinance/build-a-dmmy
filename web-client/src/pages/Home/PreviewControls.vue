@@ -11,6 +11,14 @@ watchEffect(() => {
 
     setTimeout(() => (show.value = !isConnected), 200)
 })
+
+function getRandomInt(max) {
+   return Math.floor(Math.random() * Math.floor(max));
+}
+const randomize = () => {
+  state.developer.value = getRandomInt(10000) + 1;
+  state.updateTraits();
+}
 </script>
 
 <template>
@@ -60,17 +68,19 @@ watchEffect(() => {
                             dark:text-gray-300
                         "
                     >
-                        Developer
+                        DMMYW☻RLD NFT
                     </h3>
 
-                    <input
-                        id="developerNo"
-                        v-model="state.developer.value"
-                        type="number"
-                        class="input-text text-center"
-                        placeholder="Search no"
-                        @change="state.updateTraits"
-                    />
+                    <div class="flex items-center space-x-2">
+                        <input
+                            id="developerNo"
+                            v-model="state.developer.value"
+                            type="number"
+                            class="input-text text-center"
+                            placeholder="RANDOM"
+                            @change="state.updateTraits"
+                        />
+                    </div>
                 </div>
 
                 <div class="w-full flex flex-col space-y-2">
@@ -121,6 +131,7 @@ watchEffect(() => {
                         </div>
                     </div>
                 </div>
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="randomize">Random</button>
             </div>
         </transition>
     </div>

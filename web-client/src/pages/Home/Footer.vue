@@ -21,25 +21,25 @@ import { ExternalLinkIcon } from '@heroicons/vue/outline'
             "
         >
             <a
-                href="https://opensea.io/collection/pixel-devs"
+                href="https://dummy.finance/"
                 class="flex items-center space-x-2"
                 target="_blank"
             >
-                <span>Open Sea</span>
+                <span>Dummy.Finance</span>
                 <ExternalLinkIcon class="inline-block h-4 w-4" />
             </a>
 
             <a
-                href="https://github.com/Developer-DAO/pixel-avatars"
+                href="https://t.me/+9C9ZaasqAGBmOTUx"
                 class="flex items-center space-x-2"
                 target="_blank"
             >
-                <span>Github</span>
+                <span>Telegram</span>
                 <ExternalLinkIcon class="inline-block h-4 w-4" />
             </a>
 
             <a
-                href="https://twitter.com/developer_dao"
+                href="https://twitter.com/DMMYworldNFT"
                 class="flex items-center space-x-2"
                 target="_blank"
             >

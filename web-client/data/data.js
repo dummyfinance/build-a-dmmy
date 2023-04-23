@@ -1,15 +1,15 @@
-export default [
+[
     {
         id: '1',
-        accessories: 'none',
-        hat: 'none',
-        mouth: 'none',
-        glasses: 'none',
+        accessories: 'dog brown',
+        hat: 'fade gradient blonde',
+        mouth: 'mask gooey',
+        glasses: 'glassesmeme',
         eyes: 'black',
-        tops: 'none',
-        bottoms: 'none',
-        dummies: 'white',
-        background: 'marine'
+        tops: 'hoodie darkgrey',
+        bottoms: 'pants black',
+        dummies: 'pink',
+        background: 'neutral brown sage gradient'
     },
     {
         id: '2',

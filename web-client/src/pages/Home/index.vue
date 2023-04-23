@@ -65,7 +65,7 @@ provide('previewState', previewState)
                                     : 'justify-around'
                             "
                         >
-                            <DaoLogo class="w-16 h-16 rounded-full shadow-md" />
+                            <!-- <DaoLogo class="w-16 h-16 rounded-full shadow-md" /> -->
 
                             <ConnectWallet v-if="showConnectButton" />
                         </div>

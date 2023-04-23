@@ -9,14 +9,15 @@ export default function usePreviewState() {
     const layers = computed(() => {
         const orderedTraits = [
             'background',
-            'industry',
-            'language',
-            'location',
-            'mind',
-            'os',
-            'texteditor',
-            'vibe',
-            'clothing',
+            'dummies',
+            'bottoms',
+            'tops',
+            'eyes',
+            'glasses',
+            'mouth',
+            'hat',
+            'hair',
+            'accessories',
         ]
 
         let _layers = []

@@ -3,29 +3,29 @@ import { ExternalLinkIcon } from '@heroicons/vue/outline'
 
 const faqs = [
     {
-        question: 'What are Pixel Devs?',
-        answer: 'They are a derivative NFT on the Polygon Network based on the Genesis Developer DAO NFT: Developers for Revolution. They are a graphical representation of the text-based properties from the Genesis NFT.',
+        question: 'What is Dummy?',
+        answer: 'Dummy☻DAO introduces the first “Build-your-own” dynamic NFT concept to the Telos ecosystem for the first time ever.',
     },
     {
-        question: 'Do I become Developer DAO member by purchasing a Pixel Dev?',
-        answer: 'No, a Pixel Dev is a Derivative NFT and requires you are already a DAO member. Please follow Developer DAO to stay tuned for further openings.',
+        question: 'How does this work',
+        answer: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
     },
-    {
-        question: 'How do i get a Pixel Dev?',
-        answer: 'You need to hold a Genesis NFT to be able to mint a Pixel Dev. You can claim your Pixel Dev on this website by logging in with your wallet after launch. Please note you must login with the same address that holds your Genesis NFT.',
-    },
-    {
-        question: 'What network do we use?',
-        answer: 'Pixel Devs are minted on the Polygon Network. Polygon provides lower gas fees making the NFTs more accessible and affordable for our members.',
-    },
-    {
-        question: 'How do i get MATIC on Polygon?',
-        answer: "Check out <a href='https://github.com/Developer-DAO/pixel-avatars/wiki/Polygon-MATIC' target='_blank' class='underline'>this guide</a> on the different ways you may acquire MATIC.",
-    },
-    {
-        question: 'How much does a Pixel Dev cost?',
-        answer: 'Each Pixel Dev costs 12 MATIC plus gas fees to mint.',
-    },
+    // {
+    //     question: 'How do i get a Pixel Dev?',
+    //     answer: 'You need to hold a Genesis NFT to be able to mint a Pixel Dev. You can claim your Pixel Dev on this website by logging in with your wallet after launch. Please note you must login with the same address that holds your Genesis NFT.',
+    // },
+    // {
+    //     question: 'What network do we use?',
+    //     answer: 'Pixel Devs are minted on the Polygon Network. Polygon provides lower gas fees making the NFTs more accessible and affordable for our members.',
+    // },
+    // {
+    //     question: 'How do i get MATIC on Polygon?',
+    //     answer: "Check out <a href='https://github.com/Developer-DAO/pixel-avatars/wiki/Polygon-MATIC' target='_blank' class='underline'>this guide</a> on the different ways you may acquire MATIC.",
+    // },
+    // {
+    //     question: 'How much does a Pixel Dev cost?',
+    //     answer: 'Each Pixel Dev costs 12 MATIC plus gas fees to mint.',
+    // },
 ]
 </script>
 
@@ -65,10 +65,10 @@ const faqs = [
                 <p class="mt-4 text-base text-gray-500 dark:text-gray-400">
                     If you can't find what you're looking for, feel free to
                     <a
-                        href="https://twitter.com/developer_dao"
+                        href="https://twitter.com/DMMYworldNFT"
                         class="font-medium text-blue-600 dark:text-blue-400"
                         target="_blank"
-                    >reach us on Twitter @developer_dao
+                    >reach us on Twitter @DMMYworldNFT
                         <ExternalLinkIcon
                             class="inline-block h-4 w-4 text-blue-400"
                         /> </a>.

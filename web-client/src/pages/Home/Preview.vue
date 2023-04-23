@@ -38,7 +38,7 @@ watchEffect(async () => {
             <g
                 v-for="layer in state.layers.value"
                 :key="layer"
-                transform="translate(-47, -92) scale(1.20)"
+                transform="translate(0, 0) scale(1.00)"
             >
                 <image :href="layer" class="w-full" />
             </g>
@@ -79,7 +79,7 @@ watchEffect(async () => {
             <span v-else>
                 <span> NFT Preview. </span>
                 <span v-if="launchCounter.launched.value">
-                    Connect wallet to check owner status and mint.
+                    Connect wallet to mint.
                 </span>
             </span>
         </div>

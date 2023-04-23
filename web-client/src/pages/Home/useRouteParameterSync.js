@@ -6,8 +6,8 @@ export default function useRouteParameterSync(previewState) {
     const router = useRouter()
 
     onMounted(() => {
-        if (route.query.developerId) {
-            previewState.developer.value = route.query.developerId
+        if (route.query.dmmyId) {
+            previewState.developer.value = route.query.dmmyId
             previewState.updateTraits()
         }
     })
@@ -18,7 +18,7 @@ export default function useRouteParameterSync(previewState) {
             query: {
                 ...route.query,
 
-                developerId: developer,
+                dmmyId: developer,
             },
         })
     })
