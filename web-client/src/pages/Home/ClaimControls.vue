@@ -2,12 +2,10 @@
 import Alert from '../../components/ui/Alert.vue'
 import Button from '../../components/ui/Button.vue'
 import InsufficientFundsModal from '../../components/InsufficientFundsModal'
-import EmptyInventoryModal from '../../components/EmptyInventoryModal'
 import ShareModal from '../../components/ShareModal'
 import useAvatarContract from './useAvatarContract'
-import { computed, inject, ref, triggerRef, watch, watchEffect } from 'vue'
-import { PIXEL_AVATAR_NETWORK, TEST_MINT_GENESIS_URL } from '../../constants'
-import { CheckIcon } from '@heroicons/vue/outline'
+import { computed, inject, ref, triggerRef, watch } from 'vue'
+import { PIXEL_AVATAR_NETWORK } from '../../constants'
 import Spinner from '../../components/ui/Spinner'
 
 const CLAIMING_STATES = Object.freeze({
@@ -17,41 +15,30 @@ const CLAIMING_STATES = Object.freeze({
     ERROR: 'error',
 })
 
+// Declare a ref for the flattened image
+const flattenedImage = ref('')
+
 const client = inject('web3client')
 const previewState = inject('previewState')
 const avatarContract = useAvatarContract()
 
-const availableTokens = ref(null)
 const claimState = ref(CLAIMING_STATES.IDLE)
-const claimToken = ref(null)
-const claimTokenIsMinted = computed(() => {
-    return findTokenInInventory(claimToken.value)?.minted === true
-})
-const claimButtonDisabled = computed(() => {
-    return (
-        claimTokenIsMinted.value ||
-        claimToken.value === null ||
-        [CLAIMING_STATES.LOADING, CLAIMING_STATES.SUCCESS].indexOf(
-            claimState.value
-        ) > -1
-    )
-})
 const errorMessage = ref(null)
 const mintPriceEther = ref(null)
 const showModal = ref(null)
 
 async function startClaiming() {
     try {
+        // Flatten the image in the viewbox to an SVG file
+        await flattenImage()
+
         claimState.value = CLAIMING_STATES.LOADING
 
-        await avatarContract.claim(claimToken.value)
+        await avatarContract.mint()
 
         claimState.value = CLAIMING_STATES.SUCCESS
         errorMessage.value = null
         showModal.value = null
-
-        // Refresh available tokens
-        availableTokens.value = await avatarContract.getAvailableTokens()
 
         // Trigger a "developer changed" event to force refresh of owner in preview
         triggerRef(previewState.developer)
@@ -69,59 +56,62 @@ async function startClaiming() {
     }
 }
 
+// Function to flatten the image in the viewbox to an SVG file
+    async function flattenImage() {
+        const svgElement = document.getElementById('frame');
+        const viewBox = svgElement.getAttribute('viewBox').split(' ');
+        const width = parseInt(viewBox[2]);
+        const height = parseInt(viewBox[3]);
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+
+        const images = svgElement.querySelectorAll('image');
+        const promises = [];
+
+        for (const image of images) {
+            const href = image.getAttribute('href');
+            const img = new Image();
+            promises.push(new Promise((resolve, reject) => {
+                img.onload = () => {
+                    ctx.drawImage(img, 0, 0, width, height);
+                    resolve();
+                };
+                img.onerror = reject;
+                img.src = href;
+            }));
+
+    await Promise.all(promises);
+
+    const dataUrl = canvas.toDataURL('image/png');
+    flattenedImage.value = dataUrl;
+}
+
+    Promise.all(promises).then(() => {
+    const serializer = new XMLSerializer();
+    const serialized = serializer.serializeToString(svgElement);
+    const blob = new Blob([serialized], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'flattened.svg';
+    a.click();
+    });
+}
+
 function closeModal() {
     showModal.value = null
 }
 
-function findTokenInInventory(token) {
-    return (availableTokens.value ?? []).find(
-        (obj) => parseInt(obj.token) === parseInt(token)
-    )
-}
-
-function updatePreview() {
-    claimState.value = CLAIMING_STATES.IDLE
-    errorMessage.value = null
-
-    previewState.developer.value = claimToken.value
-    previewState.updateTraits()
-}
-
-// Automatically set claimToken based on previewState
-watch(previewState.developer, (developer) => {
-    const token = parseInt(developer)
-
-    if (token === parseInt(claimToken.value) && !isNaN(token)) {
-        return
-    }
-
-    if (findTokenInInventory(token)) {
-        return (claimToken.value = token)
-    }
-
-    claimToken.value = null
-})
-
-// Load available tokens + mint price when connected to wallet
+// Load mint price when connected to wallet
 watch(client.isConnected, async (isConnected) => {
     if (isConnected) {
         claimState.value = CLAIMING_STATES.IDLE
-        claimToken.value = null
         errorMessage.value = null
-        availableTokens.value = await avatarContract.getAvailableTokens()
         mintPriceEther.value = await avatarContract.getMintPriceInEther()
-
-        if (availableTokens.value.length === 0) {
-            showModal.value = 'empty_inventory'
-        } else {
-            claimToken.value = findTokenInInventory(
-                previewState.developer.value
-            )
-                ? previewState.developer.value
-                : availableTokens.value[0].token
-
-            updatePreview()
-        }
     }
 })
 </script>
@@ -146,110 +136,18 @@ watch(client.isConnected, async (isConnected) => {
                     tracking-2
                 "
             >
-                Your Pixel Devs
+                YOUR DMMYWORLD NFT
             </h3>
 
             <p class="mt-2 text-gray-600 dark:text-gray-300 text-sm">
-                Here is a list of genesis tokens owned by your connected
-                account.
+                Mint your DMMYWORLD NFT by connecting your wallet and clicking Claim DMMY
                 <br />
-                Please select the token number for which you wish to claim your
-                Pixel Dev.
             </p>
 
-            <Alert v-if="TEST_MINT_GENESIS_URL" color="gray">
-                <div class="space-y-2">
-                    <p><b>TEST MODE</b></p>
-                    <p>
-                        Before you can claim any Pixel Avatars you must first
-                        make sure your currently connected address holds genesis
-                        tokens from the test contract.
-                    </p>
-                    <p>
-                        During test mode you may mint genesis tokens for free to
-                        test out the claim flow.
-                    </p>
-                    <p>
-                        <a
-                            :href="TEST_MINT_GENESIS_URL"
-                            target="_blank"
-                            class="text-blue-700 dark:text-blue-300"
-                        >Mint genesis tokens here ↗</a>
-                    </p>
-                </div>
+            <Alert v-if="errorMessage" class="mt-3" style="overflow-wrap: anywhere">
+                Error: {{ errorMessage }}
             </Alert>
-
-            <transition-group
-                enter-active-class="transition duration-100 ease-out"
-                enter-from-class="transform scale-95 opacity-0"
-                enter-to-class="transform scale-100 opacity-100"
-                leave-active-class="transition duration-100 ease-out"
-                leave-from-class="transform scale-100 opacity-100"
-                leave-to-class="transform scale-95 opacity-0"
-            >
-                <Alert
-                    v-if="claimTokenIsMinted"
-                    class="mt-3 flex items-center space-x-1"
-                    color="green"
-                >
-                    <span>Successfully minted</span>
-                    <CheckIcon class="w-4 h-4" />
-                </Alert>
-
-                <Alert
-                    v-if="errorMessage"
-                    class="mt-3"
-                    style="overflow-wrap: anywhere"
-                >
-                    Error: {{ errorMessage }}
-                </Alert>
-
-                <Alert
-                    v-if="
-                        availableTokens !== null && availableTokens.length === 0
-                    "
-                    class="mt-3"
-                >
-                    No genesis tokens are available on this address. You must
-                    own a genesis token before you can claim an avatar.
-                </Alert>
-            </transition-group>
-
-            <div class="mt-3 relative">
-                <select
-                    v-model="claimToken"
-                    dir="rtl"
-                    class="input-select !pr-12"
-                    :disabled="availableTokens === null"
-                    @change="updatePreview"
-                >
-                    <option
-                        :value="null"
-                        v-text="availableTokens === null ? 'Loading' : ''"
-                    />
-                    <option
-                        v-for="{ token, minted } in availableTokens ?? []"
-                        :key="token"
-                        :value="token"
-                        v-text="token + (minted ? ' - Minted' : '')"
-                    />
-                </select>
-                <div
-                    class="
-                        absolute
-                        left-0
-                        top-0
-                        bottom-1
-                        flex
-                        items-center
-                        text-sm text-gray-600
-                        dark:text-gray-400
-                    "
-                >
-                    <span>Available tokens</span>
-                </div>
-            </div>
-
+            <img :src="flattenedImage" style="width: 50%;" />
             <div class="mt-4 flex justify-between">
                 <span class="text-sm text-gray-600 dark:text-gray-400">Mint price</span>
                 <span class="flex items-center space-x-1">
@@ -267,33 +165,23 @@ watch(client.isConnected, async (isConnected) => {
 
                 <Button
                     class="w-full max-w-[12rem]"
-                    :disabled="claimButtonDisabled"
+                    :disabled="claimState === CLAIMING_STATES.LOADING"
                     @click="startClaiming()"
                 >
                     <span v-if="claimState === CLAIMING_STATES.LOADING">
                         Claiming...
                     </span>
-                    <span v-else>Claim avatar</span>
+                    <span v-else>Claim DMMY</span>
                 </Button>
             </div>
-
-            <EmptyInventoryModal
-                :show="showModal === 'empty_inventory'"
-                @switchAccount="closeModal() || client.retryConnect(true)"
-                @disconnect="closeModal() || client.disconnect()"
-                @close="closeModal()"
-            />
 
             <InsufficientFundsModal
                 :show="showModal === 'insufficient_funds'"
                 @close="closeModal()"
             />
-
             <ShareModal
-                v-if="claimToken"
                 :show="showModal === 'share'"
-                :token="claimToken"
-                :confetti="true"
+                confetti="true"
                 @close="closeModal()"
             />
         </div>

@@ -16,9 +16,11 @@ export default function useAvatarContract() {
                     `${SERVER_URL}/owners/${client.connectedAddress.value}/authorize`,
                     {
                         tokenId: token,
-                    }
+                    },
+                    
                 )
             ).data.data
+
 
             const transaction = await client
                 .contract(PIXEL_AVATAR_TOKEN, PixelAvatarContract.abi)
@@ -36,6 +38,19 @@ export default function useAvatarContract() {
 
             await transaction.wait().catch(normalizeContractError)
         },
+
+        async mint() {
+            // Add your minting logic here
+            // For example:
+            const transaction = await client
+                .contract(PIXEL_AVATAR_TOKEN, PixelAvatarContract.abi)
+                .mint({
+                    value: await this.getMintPrice(),
+                })
+                .catch(normalizeContractError)
+    
+            await transaction.wait().catch(normalizeContractError)
+        },       
 
         async getAvailableTokens() {
             const response = await axios.get(

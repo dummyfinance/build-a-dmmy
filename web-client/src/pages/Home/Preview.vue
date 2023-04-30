@@ -34,7 +34,7 @@ watchEffect(async () => {
 
 <template>
     <div class="space-y-4">
-        <svg viewBox="0 0 500 510" class="rounded-md">
+        <svg id="frame" viewBox="0 0 500 510" class="rounded-md">
             <g
                 v-for="layer in state.layers.value"
                 :key="layer"
